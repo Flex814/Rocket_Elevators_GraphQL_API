@@ -1,6 +1,6 @@
 # Rocket_Elevators_GraphQL
 
-Implemented using Node.js and Express to deploy this GraphQL API on Heroku.
+Implemented using Node.js and Express to deploy this GraphQL API on Heroku. Link: https://jakegapi.herokuapp.com/graphql
 
 Instruction for calling Qureies:
 

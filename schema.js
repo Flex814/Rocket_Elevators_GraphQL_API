@@ -553,7 +553,55 @@ const RootQueryType = new GraphQLObjectType({
       description: "List of all batteries",
       resolve: async (parent, args) => {
         const [rows, fields] = await promisePool.query(
-          `SELECT * FROM employees`
+          `SELECT * FROM batteries`
+        );
+        console.log(rows);
+        return rows;
+      },
+    },
+    column: {
+      type: ColumnType,
+      description: "A column",
+      args: {
+        id: { type: GraphQLInt },
+      },
+      resolve: async (parent, args) => {
+        const [rows, fields] = await promisePool.query(
+          `SELECT * FROM columns WHERE id = ${args.id}`
+        );
+        console.log(rows[0]);
+        return rows[0];
+      },
+    },
+    columns: {
+      type: new GraphQLList(ColumnType),
+      description: "List of all column",
+      resolve: async (parent, args) => {
+        const [rows, fields] = await promisePool.query(`SELECT * FROM columns`);
+        console.log(rows);
+        return rows;
+      },
+    },
+    elevator: {
+      type: ElevatorType,
+      description: "An elevator",
+      args: {
+        id: { type: GraphQLInt },
+      },
+      resolve: async (parent, args) => {
+        const [rows, fields] = await promisePool.query(
+          `SELECT * FROM elevators WHERE id = ${args.id}`
+        );
+        console.log(rows[0]);
+        return rows[0];
+      },
+    },
+    elevators: {
+      type: new GraphQLList(ElevatorType),
+      description: "List of all elevators",
+      resolve: async (parent, args) => {
+        const [rows, fields] = await promisePool.query(
+          `SELECT * FROM elevators`
         );
         console.log(rows);
         return rows;

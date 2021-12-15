@@ -155,6 +155,7 @@ const BuildingType = new GraphQLObjectType({
         return rows[0];
       },
     },
+
     address: {
       type: AddressType,
       resolve: async (parent, args) => {
@@ -183,6 +184,62 @@ const BuildingType = new GraphQLObjectType({
         );
         console.log(res.rows);
         return res.rows;
+      },
+    },
+  }),
+});
+
+const ColumnType = new GraphQLObjectType({
+  name: "Column",
+  description: "This is a column",
+  fields: () => ({
+    id: { type: GraphQLInt },
+    column_type: { type: GraphQLString },
+    number_of_floor: { type: GraphQLInt },
+    status: { type: GraphQLString },
+    information: { type: GraphQLString },
+    notes: { type: GraphQLString },
+    created_at: { type: GraphQLDateTime },
+    updated_at: { type: GraphQLDateTime },
+    tech_phone_number: { type: GraphQLString },
+    battery_id: { type: GraphQLInt },
+    battery: {
+      type: BatteryType,
+      resolve: async (parent, args) => {
+        const [rows, fields] = await promisePool.query(
+          `SELECT * FROM batteries WHERE id = ${parent.building_id}`
+        );
+
+        return rows[0];
+      },
+    },
+  }),
+});
+
+const ElevatorType = new GraphQLObjectType({
+  name: "Elevator",
+  description: "This is an elevator",
+  fields: () => ({
+    id: { type: GraphQLInt },
+    serial_number: { type: GraphQLString },
+    model: { type: GraphQLInt },
+    elevator_type: { type: GraphQLString },
+    status: { type: GraphQLString },
+    date_of_commissioning: { type: GraphQLDateTime },
+    date_of_last_inspection: { type: GraphQLDateTime },
+    certificate_of_inspection: { type: GraphQLString },
+    notes: { type: GraphQLString },
+    created_at: { type: GraphQLDateTime },
+    updated_at: { type: GraphQLDateTime },
+    column_id: { type: GraphQLInt },
+    column: {
+      type: ColumnType,
+      resolve: async (parent, args) => {
+        const [rows, fields] = await promisePool.query(
+          `SELECT * FROM columns WHERE id = ${parent.building_id}`
+        );
+
+        return rows[0];
       },
     },
   }),
@@ -476,6 +533,7 @@ const RootQueryType = new GraphQLObjectType({
         console.log(rows);
         return rows;
       },
+    },
     battery: {
       type: BatteryType,
       description: "A battery",

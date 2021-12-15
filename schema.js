@@ -476,6 +476,30 @@ const RootQueryType = new GraphQLObjectType({
         console.log(rows);
         return rows;
       },
+    battery: {
+      type: BatteryType,
+      description: "A battery",
+      args: {
+        id: { type: GraphQLInt },
+      },
+      resolve: async (parent, args) => {
+        const [rows, fields] = await promisePool.query(
+          `SELECT * FROM batteries WHERE id = ${args.id}`
+        );
+        console.log(rows[0]);
+        return rows[0];
+      },
+    },
+    batteries: {
+      type: new GraphQLList(BatteryType),
+      description: "List of all batteries",
+      resolve: async (parent, args) => {
+        const [rows, fields] = await promisePool.query(
+          `SELECT * FROM employees`
+        );
+        console.log(rows);
+        return rows;
+      },
     },
   }),
 });

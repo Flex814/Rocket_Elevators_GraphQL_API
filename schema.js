@@ -305,7 +305,27 @@ const CustomerType = new GraphQLObjectType({
       type: new GraphQLList(BuildingType),
       resolve: async (parent, args) => {
         const [rows, fields] = await promisePool.query(
-          `SELECT * FROM buildings WHERE id = ${parent.building_id}`
+          `SELECT * FROM buildings WHERE id = ${parent.id}`
+        );
+
+        return rows;
+      },
+    },
+    address: {
+      type: AddressType,
+      resolve: async (parent, args) => {
+        const [rows, fields] = await promisePool.query(
+          `SELECT * FROM addresses WHERE id = ${parent.address_id}`
+        );
+
+        return rows[0];
+      },
+    },
+    batteries: {
+      type: new GraphQLList(BatteryType),
+      resolve: async (parent, args) => {
+        const [rows, fields] = await promisePool.query(
+          `SELECT * FROM batteries WHERE id = ${parent.id}`
         );
 
         return rows;
@@ -479,10 +499,12 @@ const RootQueryType = new GraphQLObjectType({
       description: "A building",
       args: {
         id: { type: GraphQLInt },
+        // contact_email: { type: GraphQLString },
       },
       resolve: async (parent, args) => {
         const [rows, fields] = await promisePool.query(
           `SELECT * FROM buildings WHERE id = ${args.id}`
+          // `SELECT * FROM buildings WHERE contact_email = '${args.building.customer.contact_email}'`
         );
         console.log(rows[0]);
         return rows[0];
@@ -528,12 +550,13 @@ const RootQueryType = new GraphQLObjectType({
       type: CustomerType,
       description: "A customer",
       args: {
-        id: { type: GraphQLInt },
+        // id: { type: GraphQLInt },
         contact_email: { type: GraphQLString },
       },
       resolve: async (parent, args) => {
         const [rows, fields] = await promisePool.query(
-          `SELECT * FROM customers WHERE id = ${args.id}`
+          // `SELECT * FROM customers WHERE id = ${args.id}`
+          `SELECT * FROM customers WHERE contact_email = '${args.contact_email}'`
         );
         console.log(rows[0]);
         return rows[0];

@@ -129,6 +129,16 @@ const BatteryType = new GraphQLObjectType({
         return rows[0];
       },
     },
+    columns: {
+      type: new GraphQLList(ColumnType),
+      resolve: async (parent, args) => {
+        const [rows, fields] = await promisePool.query(
+          `SELECT * FROM columns WHERE id = ${parent.id}`
+        );
+
+        return rows;
+      },
+    },
   }),
 });
 
@@ -164,6 +174,16 @@ const BuildingType = new GraphQLObjectType({
         );
 
         return rows[0];
+      },
+    },
+    batteries: {
+      type: new GraphQLList(BatteryType),
+      resolve: async (parent, args) => {
+        const [rows, fields] = await promisePool.query(
+          `SELECT * FROM batteries WHERE id = ${parent.id}`
+        );
+
+        return rows;
       },
     },
     buildingDetails: {
@@ -211,6 +231,16 @@ const ColumnType = new GraphQLObjectType({
         );
 
         return rows[0];
+      },
+    },
+    elevators: {
+      type: new GraphQLList(ElevatorType),
+      resolve: async (parent, args) => {
+        const [rows, fields] = await promisePool.query(
+          `SELECT * FROM elevators WHERE id = ${parent.id}`
+        );
+
+        return rows;
       },
     },
   }),

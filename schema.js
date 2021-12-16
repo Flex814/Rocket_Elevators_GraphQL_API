@@ -301,6 +301,16 @@ const CustomerType = new GraphQLObjectType({
     service_tech_email: { type: GraphQLString },
     address_id: { type: GraphQLInt },
     user_id: { type: GraphQLInt },
+    buildings: {
+      type: new GraphQLList(BuildingType),
+      resolve: async (parent, args) => {
+        const [rows, fields] = await promisePool.query(
+          `SELECT * FROM buildings WHERE id = ${parent.building_id}`
+        );
+
+        return rows;
+      },
+    },
   }),
 });
 
@@ -519,6 +529,7 @@ const RootQueryType = new GraphQLObjectType({
       description: "A customer",
       args: {
         id: { type: GraphQLInt },
+        contact_email: { type: GraphQLString },
       },
       resolve: async (parent, args) => {
         const [rows, fields] = await promisePool.query(
